@@ -81,6 +81,4 @@ public class Device : Controller
 
         return Json(device,  new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles });
     }
-    
-    
 }

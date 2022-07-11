@@ -8,7 +8,7 @@ namespace PedProject.Controllers;
 
 public class Brand : Controller
 {
-    private ApplicationContext db;
+    private readonly ApplicationContext db;
     
     public Brand(ApplicationContext context)
     {

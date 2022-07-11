@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PedProject.Model;
 
@@ -6,7 +7,7 @@ namespace PedProject.Controllers;
 
 public class Type : Controller
 {
-    private ApplicationContext db;
+    private readonly ApplicationContext db;
     
     public Type(ApplicationContext context)
     {
@@ -14,6 +15,7 @@ public class Type : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "ADMIN")]
     public async Task<IActionResult> Create([FromBody] PedProject.Model.Type type)
     {
         db.Types.Add(type);

@@ -7,6 +7,20 @@ namespace PedProject;
 
 public class JWTtokken
 {
+    public static ClaimsIdentity GetClaimIdentity(string id, string email, string role)
+    {
+        var claims = new List<Claim>
+        {
+            new Claim("id", id),
+            new Claim(ClaimsIdentity.DefaultNameClaimType, email),
+            new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
+        };
+
+        ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+        return claimsIdentity;
+    }
+    
     public static string GetTokken(IEnumerable<Claim> claims)
     {
         var jwt = new JwtSecurityToken(

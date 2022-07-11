@@ -9,10 +9,7 @@ var builder = WebApplication.CreateBuilder(
 
 builder.Services.AddMvc();
 builder.Services.AddDbContext<ApplicationContext>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAllOrigin", corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin());
-});
+builder.Services.AddCors();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -31,9 +28,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 var app = builder.Build();
 
+app.UseCors(builder2 => builder2.AllowAnyOrigin().AllowAnyHeader());
 app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
-app.UseCors();
+app.UseAuthentication(); //CНАЧАЛА АУНТИФИКАЦИЯ
+app.UseAuthorization(); //ПОТОМ АВТОРИЗАЦИЯ
 
 
 app.MapGet("/", () =>
