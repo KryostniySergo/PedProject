@@ -19,19 +19,24 @@ public class Device : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromForm] Model.Device device, [FromForm] DeviceInfo deviceInfo)
+    public async Task<IActionResult> Create([FromForm] Model.Device device,[FromForm] string info, [FromServices] ILogger<Device> logger)
     {
         var uniqueFileName = GetUniqueFileName(device.Image.FileName);
         var uploads = Path.Combine(Environment.CurrentDirectory, "Pictures");
-        device.ImagePath = Path.Combine(uploads, uniqueFileName); // КАК ПУТЬ
+        device.ImagePath = uniqueFileName; // КАК ПУТЬ
         
-        await device.Image.CopyToAsync(new FileStream(device.ImagePath, FileMode.Create));
+        await device.Image.CopyToAsync(new FileStream(Path.Combine(uploads, uniqueFileName), FileMode.Create));
+        
+        var deviceInfos = JsonSerializer.Deserialize<List<DeviceInfo>>(info);
 
-        device.DeviceInfo = deviceInfo;
-        
+        foreach (var item in deviceInfos)
+        {
+            device.DeviceInfo.Add(item);
+        }
+
         await db.Devices.AddAsync(device);
         await db.SaveChangesAsync();
-
+        
         return Json(device,
             new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles });  //TODO -> ПОДУМАТЬ;
     }
@@ -67,8 +72,14 @@ public class Device : Controller
             devices = await db.Devices.Where(d => d.BrandId == brandId && d.TypeId == typeId).Skip(offset).Take(limit).ToListAsync();
         }
 
-        return Json(devices);
+        var totalCount = await db.Devices.CountAsync();
+        
+        foreach (var device in devices)
+        {
+            device.Count = totalCount;
+        }
 
+        return Json(devices);
     }
 
     public async Task<IActionResult> GetOne(int id)

@@ -50,7 +50,10 @@ public class Device
     public Brand? Brand { get; set; }
 
     public List<Basket_device> BasketDevices { get; set; } = new();
-    public DeviceInfo? DeviceInfo { get; set; }
+    public List<DeviceInfo> DeviceInfo { get; set; } = new();
+
+    [NotMapped]
+    public int Count { get; set; }
 }
 
 public class DeviceInfo
