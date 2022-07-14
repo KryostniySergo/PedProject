@@ -20,7 +20,6 @@ public class User : Controller
     [HttpPost]
     public async Task<IActionResult> Registration([FromBody] Model.User? user)
     {
-        //if (!ModelState.IsValid) return ValidationProblem("Вы не ввели данные в поля");
 
         var candidate = await db.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
         if (candidate is not null)

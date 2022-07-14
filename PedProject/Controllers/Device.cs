@@ -7,7 +7,6 @@ using PedProject.Model;
 
 namespace PedProject.Controllers;
 
-//TODO -> https://stackoverflow.com/questions/35379309/how-to-upload-files-in-asp-net-core [ГАЙД НА ФАЙЛЫ]
 
 public class Device : Controller
 {
@@ -23,7 +22,7 @@ public class Device : Controller
     {
         var uniqueFileName = GetUniqueFileName(device.Image.FileName);
         var uploads = Path.Combine(Environment.CurrentDirectory, "Pictures");
-        device.ImagePath = uniqueFileName; // КАК ПУТЬ
+        device.ImagePath = uniqueFileName;
         
         await device.Image.CopyToAsync(new FileStream(Path.Combine(uploads, uniqueFileName), FileMode.Create));
         
@@ -38,7 +37,7 @@ public class Device : Controller
         await db.SaveChangesAsync();
         
         return Json(device,
-            new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles });  //TODO -> ПОДУМАТЬ;
+            new JsonSerializerOptions() { ReferenceHandler = ReferenceHandler.IgnoreCycles });
     }
     
     private string GetUniqueFileName(string fileName)
@@ -52,16 +51,15 @@ public class Device : Controller
     {
         List<Model.Device> devices;
 
-        //Примерно 50 минута видио про магаз
         var offset = page * limit - limit;
 
         if (brandId == 0 && typeId == 0)
         {
-            devices = await db.Devices.Skip(offset).Take(limit).ToListAsync(); //Если нет бренда и типа / выводим всё
+            devices = await db.Devices.Skip(offset).Take(limit).ToListAsync();
         }
         else if (brandId != 0 && typeId == 0)
         { 
-            devices = await db.Devices.Where(d => d.BrandId == brandId).Skip(offset).Take(limit).ToListAsync(); //Если нет типа / выводим бренды
+            devices = await db.Devices.Where(d => d.BrandId == brandId).Skip(offset).Take(limit).ToListAsync();
         }
         else if (brandId == 0 && typeId != 0)
         {

@@ -4,8 +4,6 @@ using PedProject.Model;
 
 namespace PedProject.Controllers;
 
-//TODO -> ДОДЕЛАТЬ БД ПО ВИДОСУ (СДЕЛАТЬ ЗАВИСИМОСТИ)
-
 public class Brand : Controller
 {
     private readonly ApplicationContext db;

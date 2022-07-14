@@ -1,14 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PedProject;
 using PedProject.Model;
 
 var builder = WebApplication.CreateBuilder(
-    new WebApplicationOptions { WebRootPath = "Pictures"}); 
+    new WebApplicationOptions { WebRootPath = "Pictures"});
+
+string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 
 builder.Services.AddMvc();
-builder.Services.AddDbContext<ApplicationContext>();
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
 builder.Services.AddCors();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -31,8 +34,8 @@ var app = builder.Build();
 app.UseCors(builder2 => builder2.AllowAnyOrigin().AllowAnyHeader());
 app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
-app.UseAuthentication(); //CНАЧАЛА АУНТИФИКАЦИЯ
-app.UseAuthorization(); //ПОТОМ АВТОРИЗАЦИЯ
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapGet("/", () =>

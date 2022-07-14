@@ -16,23 +16,11 @@ public sealed class ApplicationContext : DbContext
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
     {
-        //Database.EnsureDeleted();
-        Database.EnsureCreated();   // создаем базу данных при первом обращении
+        Database.EnsureCreated(); 
     }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=OnlineStrore2;Username=postgres;Password=12345");
-        //optionsBuilder.LogTo(Console.WriteLine);
-    }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Device>()
-        //     .HasOne(u => u.DeviceInfo)
-        //     .WithOne(u => u.Device)
-        //     .HasForeignKey<DeviceInfo>(u => u.DeviceId);
-        
         modelBuilder.Entity<User>()
             .HasOne(u => u.Basket)
             .WithOne(u => u.User)
